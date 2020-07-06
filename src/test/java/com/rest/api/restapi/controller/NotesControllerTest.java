@@ -1,6 +1,8 @@
 package com.rest.api.restapi.controller;
 
 
+import com.rest.api.restapi.model.Note;
+import com.rest.api.restapi.service.NotesService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +30,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class NotesControllerTest {
     @MockBean
-    private NoteService service;
+    private NotesService service;
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void testGetReviewByIdFound() throws Exception {
+    void testGetNoteByIdFound() throws Exception {
         // Setup our mocked service
         Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
         doReturn(Optional.of(mockNote)).when(service).findById(1L);
 
         // Execute the GET request
-        mockMvc.perform(get("/note/{id}", 1L))
+        mockMvc.perform(get("/notes/{id}", 1L))
 
                 // Validate the response code and content type
                 .andExpect(status().isOk())
@@ -50,9 +52,8 @@ public class NotesControllerTest {
                 .andExpect(header().string(HttpHeaders.LOCATION, "/notes/"+mockNote.getId()))
 
                 // Validate the returned fields
-                .andExpect(jsonPath("$.id", is(1L)))
+                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Note number one")))
                 .andExpect(jsonPath("$.description", is("Note one example lorrem ipsum")));
-
     }
 }

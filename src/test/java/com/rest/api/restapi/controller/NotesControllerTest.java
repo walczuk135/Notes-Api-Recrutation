@@ -59,5 +59,14 @@ public class NotesControllerTest {
                 .andExpect(jsonPath("$.description", is("Note one example lorrem ipsum")));
     }
 
+    @Test
+    void testGetNoteByIdNotFound() throws Exception {
+        //given
+        given(service.findById(anyLong())).willReturn(Optional.empty());
 
+        // when
+        mockMvc.perform(get("/notes/{id}", 1L))
+                // Validate that we get a 404 Not Found response
+                .andExpect(status().isNotFound());
+    }
 }

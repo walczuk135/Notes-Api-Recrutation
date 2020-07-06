@@ -39,4 +39,16 @@ public class NoteRepositoryImplTest {
         Assertions.assertSame(returnedNote.get().getTitle(), mockNote.getTitle());
         Assertions.assertSame(returnedNote.get().getDescription(), mockNote.getDescription());
     }
+
+    @Test
+    void testFindByIdNotFound() {
+        //Given
+        given(repository.findById(1)).willReturn(Optional.empty());
+
+        //when
+        Optional<Note> returnedNote = repository.findById(1);
+
+        //then
+        Assertions.assertFalse(returnedNote.isPresent());
+    }
 }

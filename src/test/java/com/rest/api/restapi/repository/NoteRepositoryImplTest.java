@@ -26,7 +26,7 @@ public class NoteRepositoryImplTest {
     @Test
     void testFindByIdSuccess() {
         //given
-        Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
+        Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
         given(repository.findById(anyLong())).willReturn(Optional.of(mockNote));
 
         //when

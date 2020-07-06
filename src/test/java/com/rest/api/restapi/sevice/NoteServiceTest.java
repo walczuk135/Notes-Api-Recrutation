@@ -30,7 +30,7 @@ public class NoteServiceTest {
     @Test
     void testFindByIdSuccess() {
         //given
-        Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
+        Note mockNote = new Note( "Note number one", "Note one example lorrem ipsum");
         given(repository.findById(anyLong())).willReturn(Optional.of(mockNote));
 
         //when
@@ -60,7 +60,7 @@ public class NoteServiceTest {
     void testSaveNote() {
         //given
         NoteDto noteDto=new NoteDto("Note number one", "Note one example lorrem ipsum");
-        Note note=new Note(1L,"Note number one", "Note one example lorrem ipsum");
+        Note note=new Note("Note number one", "Note one example lorrem ipsum");
         given(repository.save(note)).willReturn(note);
 
         //when

@@ -1,5 +1,6 @@
 package com.rest.api.restapi.service;
 
+import com.rest.api.restapi.controller.dto.MapperDto;
 import com.rest.api.restapi.controller.dto.NoteDto;
 import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.repository.NoteRepositoryImpl;
@@ -12,6 +13,7 @@ public class NotesService {
 
     private final NoteRepositoryImpl repository;
 
+
     public NotesService(NoteRepositoryImpl repository) {
         this.repository = repository;
     }
@@ -21,6 +23,7 @@ public class NotesService {
     }
 
     public Note save(NoteDto noteDto) {
-        return null;
+        Note note = MapperDto.mapDtoToNote(noteDto);
+        return note;
     }
 }

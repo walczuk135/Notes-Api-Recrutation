@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class Note {
-    private long id;
+    private static long nextId;
+    private long id=nextId+1;
     private String title;
     private String description;
 
-    public Note(long id, String title, String description) {
-        this.id = id;
+    public Note(String title, String description) {
         this.title = title;
         this.description = description;
     }

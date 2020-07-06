@@ -25,4 +25,8 @@ public class NoteRepositoryImpl implements NoteRepository{
     public List<Note> getNotes() {
         return notes;
     }
+
+    public Note save(Note note) {
+        return null;
+    }
 }

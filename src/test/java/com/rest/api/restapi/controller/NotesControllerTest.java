@@ -42,7 +42,7 @@ public class NotesControllerTest {
     @Test
     void testGetNoteByIdFound() throws Exception {
         //given
-        Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
+        Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
         given(service.findById(anyLong())).willReturn(Optional.of(mockNote));
 
         //then
@@ -76,7 +76,7 @@ public class NotesControllerTest {
     void testCreateNote() throws Exception {
         //given
         NoteDto noteDto = new NoteDto("Note number one", "Note one example lorrem ipsum");
-        Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
+        Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
         given(service.save(noteDto)).willReturn(mockNote);
 
         //then

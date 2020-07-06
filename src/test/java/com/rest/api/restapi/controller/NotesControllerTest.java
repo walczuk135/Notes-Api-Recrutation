@@ -64,9 +64,34 @@ public class NotesControllerTest {
         //given
         given(service.findById(anyLong())).willReturn(Optional.empty());
 
-        // when
+        //then
         mockMvc.perform(get("/notes/{id}", 1L))
                 // Validate that we get a 404 Not Found response
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void testCreateNote() throws Exception {
+        //given
+        NoteDto noteDto = new NoteDto("Note number one","Note one example lorrem ipsum");
+        Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
+
+        given(service.save(noteDto)).willReturn(mockNote);
+
+        //then
+        mockMvc.perform(post("/notes/"))
+
+                // Validate the response code and content type
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+
+                // Validate the headers
+                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/"+mockNote.getId()))
+
+                // Validate the returned fields
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.title", is("Note number one")))
+                .andExpect(jsonPath("$.description", is("Note one example lorrem ipsum")));
+    }
+
 }

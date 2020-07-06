@@ -1,5 +1,6 @@
 package com.rest.api.restapi.repository;
 
+import com.rest.api.restapi.controller.dto.NoteDto;
 import com.rest.api.restapi.model.Note;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -50,5 +51,21 @@ public class NoteRepositoryImplTest {
 
         //then
         Assertions.assertFalse(returnedNote.isPresent());
+    }
+
+    @Test
+    void testSaveNote() {
+        //given
+        Note mockNote=new Note("Note number one", "Note one example lorrem ipsum");
+        given(repository.save(mockNote)).willReturn(mockNote);
+
+        //when
+        Note returnedNote = repository.save(mockNote);
+
+        //then
+        Assertions.assertNotNull(returnedNote);
+        Assertions.assertSame(returnedNote.getId(), mockNote.getId());
+        Assertions.assertSame(returnedNote.getTitle(), mockNote.getTitle());
+        Assertions.assertSame(returnedNote.getDescription(), mockNote.getDescription());
     }
 }

@@ -27,6 +27,7 @@ public class NoteRepositoryImpl implements NoteRepository{
     }
 
     public Note save(Note note) {
-        return null;
+         notes.add(note);
+         return note;
     }
 }

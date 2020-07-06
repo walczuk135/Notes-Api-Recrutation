@@ -1,16 +1,17 @@
-package com.rest.api.restapi.model;
+package com.rest.api.restapi.controller.dto;
 
 import lombok.Data;
 
 @Data
-public class Note {
-    private long id;
+public class NoteDto {
     private String title;
     private String description;
 
-    public Note(long id, String title, String description) {
-        this.id = id;
+    public NoteDto(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public NoteDto() {
     }
 }

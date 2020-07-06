@@ -1,6 +1,8 @@
 package com.rest.api.restapi.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rest.api.restapi.controller.dto.NoteDto;
 import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.service.NotesService;
 import org.junit.jupiter.api.Test;
@@ -51,7 +53,7 @@ public class NotesControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/"+mockNote.getId()))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/" + mockNote.getId()))
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(1)))
@@ -73,20 +75,18 @@ public class NotesControllerTest {
     @Test
     void testCreateNote() throws Exception {
         //given
-        NoteDto noteDto = new NoteDto("Note number one","Note one example lorrem ipsum");
+        NoteDto noteDto = new NoteDto("Note number one", "Note one example lorrem ipsum");
         Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
-
         given(service.save(noteDto)).willReturn(mockNote);
 
         //then
-        mockMvc.perform(post("/notes/"))
-
-                // Validate the response code and content type
+        mockMvc.perform(post("/notes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(noteDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
                 // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/"+mockNote.getId()))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/" + mockNote.getId()))
 
                 // Validate the returned fields
                 .andExpect(jsonPath("$.id", is(1)))
@@ -94,4 +94,11 @@ public class NotesControllerTest {
                 .andExpect(jsonPath("$.description", is("Note one example lorrem ipsum")));
     }
 
+    static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

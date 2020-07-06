@@ -1,11 +1,11 @@
 package com.rest.api.restapi.controller;
 
+import com.rest.api.restapi.controller.dto.NoteDto;
+import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.service.NotesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,6 +32,19 @@ public class NotesController {
                     }
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/notes")
+    public ResponseEntity<Note> save(@RequestBody NoteDto noteDto) {
+        Note saveNote = service.save(noteDto);
+
+        try {
+            return ResponseEntity
+                    .created(new URI("/notes/" + saveNote.getId()))
+                    .body(saveNote);
+        } catch (URISyntaxException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

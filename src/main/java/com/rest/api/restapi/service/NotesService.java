@@ -1,5 +1,6 @@
 package com.rest.api.restapi.service;
 
+import com.rest.api.restapi.controller.dto.NoteDto;
 import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.repository.NoteRepositoryImpl;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,9 @@ public class NotesService {
 
     public Optional<Note> findById(long id) {
         return repository.findById(id);
+    }
+
+    public Note save(NoteDto noteDto) {
+        return null;
     }
 }

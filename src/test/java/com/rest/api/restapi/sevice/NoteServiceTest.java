@@ -1,5 +1,6 @@
 package com.rest.api.restapi.sevice;
 
+import com.rest.api.restapi.controller.dto.NoteDto;
 import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.repository.NoteRepositoryImpl;
 import com.rest.api.restapi.service.NotesService;
@@ -45,7 +46,7 @@ public class NoteServiceTest {
 
     @Test
     void testFindByIdNotFound() {
-        //Given
+        //given
         given(repository.findById(1)).willReturn(Optional.empty());
 
         //when
@@ -53,6 +54,21 @@ public class NoteServiceTest {
 
         //then
         Assertions.assertFalse(returnedNote.isPresent());
+    }
+
+    @Test
+    void testSaveNote() {
+        //given
+        NoteDto noteDto=new NoteDto("Note number one", "Note one example lorrem ipsum");
+        Note note=new Note(1L,"Note number one", "Note one example lorrem ipsum");
+        given(repository.save(note)).willReturn(note);
+
+        //when
+        Note returnedNote = service.save(noteDto);
+
+        //then
+        Assertions.assertNotNull(returnedNote);
+        Assertions.assertEquals(returnedNote.getId(),note.getId());
     }
 
 }

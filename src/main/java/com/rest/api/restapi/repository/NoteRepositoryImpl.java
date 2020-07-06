@@ -6,18 +6,23 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 
 @Repository
 public class NoteRepositoryImpl implements NoteRepository{
 
-    private List<Note> notes;
+    private final List<Note> notes;
 
     public NoteRepositoryImpl() {
         this.notes = new ArrayList<>();
     }
 
-    public Optional<Note> findById(Long id) {
-        return null;
+    public Optional<Note> findById(long id) {
+        return notes.stream()
+                .filter(note->note.getId()==id)
+                .findAny();
+    }
+
+    public List<Note> getNotes() {
+        return notes;
     }
 }

@@ -5,6 +5,6 @@ import com.rest.api.restapi.model.Note;
 import java.util.Optional;
 
 public interface NoteRepository {
-    Optional<Note> findById(Long id);
+    Optional<Note> findById(long id);
 
 }

@@ -1,6 +1,7 @@
 package com.rest.api.restapi.sevice;
 
 import com.rest.api.restapi.model.Note;
+import com.rest.api.restapi.repository.NoteRepositoryImpl;
 import com.rest.api.restapi.service.NotesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,13 +22,13 @@ public class NoteServiceTest {
     private NotesService service;
 
     @MockBean
-    private NoteRepository repository;
+    private NoteRepositoryImpl repository;
 
     @Test
     void testFindByIdSuccess() {
         // Setup our mock
         Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
-        doReturn(Optional.of(mockNote)).when(repository).findById("reviewId");
+        doReturn(Optional.of(mockNote)).when(repository).findById(1L);
 
         // Execute the service call
         Optional<Note> returnedReview = service.findById(1L);

@@ -14,8 +14,8 @@ import java.net.URISyntaxException;
 public class NotesController {
     private final NotesService service;
 
-    private NotesController(NotesService notesService) {
-        this.service = notesService;
+    private NotesController(NotesService service) {
+        this.service = service;
     }
 
     @GetMapping("/notes/{id}")

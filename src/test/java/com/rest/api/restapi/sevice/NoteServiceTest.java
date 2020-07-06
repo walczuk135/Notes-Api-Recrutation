@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(SpringExtension.class)
@@ -26,15 +28,18 @@ public class NoteServiceTest {
 
     @Test
     void testFindByIdSuccess() {
-        // Setup our mock
+        //given
         Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
-        doReturn(Optional.of(mockNote)).when(repository).findById(1L);
+        given(repository.findById(anyLong())).willReturn(Optional.of(mockNote));
 
-        // Execute the service call
-        Optional<Note> returnedReview = service.findById(1L);
+        //when
+        Optional<Note> returnedNote = service.findById(1L);
 
-        // Assert the response
-        Assertions.assertTrue(returnedReview.isPresent(), "Review was not found");
-        Assertions.assertSame(returnedReview.get(), mockNote, "Review should be the same");
+        //then
+        Assertions.assertTrue(returnedNote.isPresent());
+        Assertions.assertSame(returnedNote.get(), mockNote);
+        Assertions.assertSame(returnedNote.get().getId(), mockNote.getId());
+        Assertions.assertSame(returnedNote.get().getTitle(), mockNote.getTitle());
+        Assertions.assertSame(returnedNote.get().getDescription(), mockNote.getDescription());
     }
 }

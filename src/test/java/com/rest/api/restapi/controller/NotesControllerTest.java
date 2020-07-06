@@ -18,6 +18,8 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,11 +39,11 @@ public class NotesControllerTest {
 
     @Test
     void testGetNoteByIdFound() throws Exception {
-        // Setup our mocked service
+        //given
         Note mockNote = new Note(1, "Note number one", "Note one example lorrem ipsum");
-        doReturn(Optional.of(mockNote)).when(service).findById(1L);
+        given(service.findById(anyLong())).willReturn(Optional.of(mockNote));
 
-        // Execute the GET request
+        //then
         mockMvc.perform(get("/notes/{id}", 1L))
 
                 // Validate the response code and content type
@@ -56,4 +58,6 @@ public class NotesControllerTest {
                 .andExpect(jsonPath("$.title", is("Note number one")))
                 .andExpect(jsonPath("$.description", is("Note one example lorrem ipsum")));
     }
+
+
 }

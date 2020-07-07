@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class NotesController {
@@ -28,7 +29,7 @@ public class NotesController {
                                 .ok()
                                 .location(new URI("/notes/" + note.getId()))
                                 .body(note);
-                    } catch (URISyntaxException e ) {
+                    } catch(URISyntaxException e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                     }
                 })
@@ -37,7 +38,7 @@ public class NotesController {
 
     @GetMapping("/notes")
     public ResponseEntity<List<Note>> getAllNotes() {
-        return new ResponseEntity<>(service.findAllNote(),HttpStatus.OK);
+        return new ResponseEntity<>(service.findAllNote(), HttpStatus.OK);
     }
 
     @PostMapping("/notes")
@@ -48,9 +49,31 @@ public class NotesController {
             return ResponseEntity
                     .created(new URI("/notes/" + saveNote.getId()))
                     .body(saveNote);
-        } catch (URISyntaxException e) {
+        } catch(URISyntaxException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    @PutMapping("/notes/{id}")
+    public ResponseEntity<Void> update(@RequestBody NoteDto noteDto, @PathVariable Long id) {
+        ///  Optional<Note> note = service.findById(id);
+            if(service.findById(id).isPresent()) {
+                service.update(noteDto, id);
+                return ResponseEntity.noContent().build();
+            }
+            Note save = service.save(noteDto);
+            return ResponseEntity.created(URI.create(String.format("/notes/%d", save.getId()))).build();
+    }
+
+//    @PutMapping("/notes/{id}")
+//    public ResponseEntity<Void> update(@RequestBody NoteDto noteDto, @PathVariable Long id) {
+//        ///  Optional<Note> note = service.findById(id);
+//        Optional<Note> byId = service.findById(id);
+//        if(byId.get() == null){
+//            service.save(noteDto);
+//            return ResponseEntity.created(URI.create(String.format("/todos/%d", id))).build();
+//        }
+//        service.update(noteDto,id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

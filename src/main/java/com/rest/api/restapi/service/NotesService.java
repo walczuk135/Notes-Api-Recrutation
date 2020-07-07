@@ -14,7 +14,6 @@ public class NotesService {
 
     private final NoteRepositoryImpl repository;
 
-
     public NotesService(NoteRepositoryImpl repository) {
         this.repository = repository;
     }
@@ -24,11 +23,16 @@ public class NotesService {
     }
 
     public Note save(NoteDto noteDto) {
-        Note note = MapperDto.mapDtoToNote(noteDto);
-        return note;
+        return repository.save(MapperDto.mapDtoToNote(noteDto));
     }
 
     public List<Note> findAllNote() {
-        return null;
+        return repository.findAllNotes();
+    }
+
+    public void update(NoteDto noteDto, Long id) {
+        Note note = MapperDto.mapDtoToNote(noteDto);
+        note.setId(id);
+        repository.updateNote(note);
     }
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -33,7 +33,7 @@ public class NoteServiceTest {
     @Test
     void testFindByIdSuccess() {
         //given
-        Note mockNote = new Note( "Note number one", "Note one example lorrem ipsum");
+        Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
         given(repository.findById(anyLong())).willReturn(Optional.of(mockNote));
 
         //when
@@ -62,37 +62,56 @@ public class NoteServiceTest {
     @Test
     void testSaveNote() {
         //given
-        NoteDto noteDto=new NoteDto("Note number one", "Note one example lorrem ipsum");
-        Note note=new Note("Note number one", "Note one example lorrem ipsum");
+        NoteDto noteDto = new NoteDto("Note number one", "Note one example lorrem ipsum");
+        Note note = new Note("Note number one", "Note one example lorrem ipsum");
+        note.setId(1);
         given(repository.save(note)).willReturn(note);
 
         //when
         Note returnedNote = service.save(noteDto);
+        verify(repository, times(1)).save(returnedNote);
 
         //then
-        Assertions.assertNotNull(returnedNote);
-        Assertions.assertEquals(returnedNote.getId(),note.getId());
+      //  Assertions.assertNotNull(returnedNote);
+        //Assertions.assertEquals(returnedNote.getId(), note.getId());
+    }
+
+    @Test
+    void testUpdateNote() {
+
+        NoteDto update = new NoteDto("Note uptade one", "note uptade one");
+        Note note1 = new Note("Note uptade one", "note uptade one");
+        note1.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(note1));
+        when(repository.save(note1)).thenReturn(note1);
+        service.update(update, 1L);
+
+        verify(repository, times(1)).updateNote(note1);
+
     }
 
     @Test
     void testFindAllNote() {
         //given
-        Note mockNote1 = new Note( "Note number one", "Note one example lorrem ipsum");
+        Note mockNote1 = new Note("Note number one", "Note one example lorrem ipsum");
         mockNote1.setId(1L);
-        Note mockNote2 = new Note( "Note number one", "Note one example lorrem ipsum");
+        Note mockNote2 = new Note("Note number one", "Note one example lorrem ipsum");
         mockNote1.setId(2L);
-        Note mockNote3 = new Note( "Note number one", "Note one example lorrem ipsum");
+        Note mockNote3 = new Note("Note number one", "Note one example lorrem ipsum");
         mockNote3.setId(3L);
-        List<Note> noteList= Arrays.asList(mockNote1,mockNote2,mockNote3);
-        given(repository.findByAll()).willReturn(noteList);
+        List<Note> noteList = Arrays.asList(mockNote1, mockNote2, mockNote3);
+        given(repository.findAllNotes()).willReturn(noteList);
 
         //when
         List<Note> returnedNotes = service.findAllNote();
 
         //then
-        assertThat(noteList).hasSize(3);
-        assertThat(noteList).contains(mockNote1,mockNote2,mockNote3);
-        assertThat(noteList).element(1).isEqualTo(mockNote1);
+        assertThat(returnedNotes).hasSize(3);
+        assertThat(returnedNotes).contains(mockNote1, mockNote2, mockNote3);
+        assertThat(returnedNotes).element(0).isEqualTo(mockNote1);
+        assertThat(returnedNotes).element(1).isEqualTo(mockNote2);
+        assertThat(returnedNotes).element(2).isEqualTo(mockNote3);
+        assertThat(returnedNotes.get(0).getId()).isEqualTo(mockNote1.getId());
     }
 
 }

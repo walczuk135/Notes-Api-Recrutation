@@ -15,19 +15,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -40,6 +37,9 @@ public class NotesControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
     
     @Test
     void testGetNoteByIdFound() throws Exception {
@@ -130,6 +130,51 @@ public class NotesControllerTest {
                 .andExpect(jsonPath("$.[2].description", is("Note one example lorrem ipsum")));
     }
 
+    @Test
+    public void shouldUpdateNote() throws Exception {
+        // Given
+        Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
+        mockNote.setId(1L);
+        given(service.findById(1L)).willReturn(Optional.of(mockNote));
+        // When
+        ResultActions result = mockMvc.perform(put("/notes/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(mockNote)));
+        // Then
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldReturn404WhenTryPartialUpdateNoteWhichNotExists() throws Exception {
+        //given
+        given(service.findById(1)).willReturn(null);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("description", "new description");
+        //when
+        ResultActions result = this.mockMvc.perform(patch("/todos/","10")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(updates)));
+        //then
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldPartialUpdateNote() throws Exception {
+        //given
+        Note note = new Note("title", "desc");
+        note.setId(1L);
+        given(service.findById(1L)).willReturn(Optional.of(note));
+        HashMap<String, Object> updates = new HashMap<>();
+        updates.put("title", "new title");
+        updates.put("description", "new description");
+        //when
+        ResultActions result = mockMvc.perform(patch("/note/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updates)));
+        //then
+        result.andExpect(status().isNoContent())
+                .andExpect(status().reason("Note partial updated!"));
+    }
 
     static String asJsonString(final Object obj) {
         try {

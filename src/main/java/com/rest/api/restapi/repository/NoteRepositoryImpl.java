@@ -27,10 +27,16 @@ public class NoteRepositoryImpl implements NoteRepository{
     }
 
     public Note save(Note note) {
-//        note.setId(note.getId()+1L);
-//        Note note1=note;
-//         notes.add(note1);
         notes.add(note);
         return note;
+    }
+
+    public List<Note> findAllNotes() {
+        return notes;
+    }
+
+    public void updateNote(Note note) {
+        notes.set((int) (note.getId()-1),note);
+        System.out.println(notes);
     }
 }

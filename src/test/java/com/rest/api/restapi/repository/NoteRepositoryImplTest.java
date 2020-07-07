@@ -10,11 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -67,5 +71,43 @@ public class NoteRepositoryImplTest {
         Assertions.assertSame(returnedNote.getId(), mockNote.getId());
         Assertions.assertSame(returnedNote.getTitle(), mockNote.getTitle());
         Assertions.assertSame(returnedNote.getDescription(), mockNote.getDescription());
+    }
+
+    @Test
+    void testUpdateNote() {
+
+       // NoteDto update = new NoteDto("Note uptade one", "note uptade one");
+        Note note1 = new Note("Note uptade one", "note uptade one");
+        note1.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(note1));
+        when(repository.save(note1)).thenReturn(note1);
+        repository.updateNote(note1);
+
+        verify(repository, times(1)).updateNote(note1);
+
+    }
+
+    @Test
+    void testFindAllNote() {
+        //given
+        Note mockNote1 = new Note( "Note number one", "Note one example lorrem ipsum");
+        mockNote1.setId(1L);
+        Note mockNote2 = new Note( "Note number two", "Note one example lorrem ipsum");
+        mockNote1.setId(2L);
+        Note mockNote3 = new Note( "Note number three", "Note one example lorrem ipsum");
+        mockNote3.setId(3L);
+        List<Note> noteList= Arrays.asList(mockNote1,mockNote2,mockNote3);
+        given(repository.findAllNotes()).willReturn(noteList);
+
+        //when
+        List<Note> returnedNotes = repository.findAllNotes();
+
+        //then
+        assertThat(returnedNotes).hasSize(3);
+        assertThat(returnedNotes).contains(mockNote1,mockNote2,mockNote3);
+        assertThat(returnedNotes).element(0).isEqualTo(mockNote1);
+        assertThat(returnedNotes).element(1).isEqualTo(mockNote2);
+        assertThat(returnedNotes).element(2).isEqualTo(mockNote3);
+        assertThat(returnedNotes.get(0).getId()).isEqualTo(mockNote1.getId());
     }
 }

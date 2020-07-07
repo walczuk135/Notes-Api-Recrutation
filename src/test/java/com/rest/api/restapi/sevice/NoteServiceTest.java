@@ -12,8 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
@@ -69,6 +72,27 @@ public class NoteServiceTest {
         //then
         Assertions.assertNotNull(returnedNote);
         Assertions.assertEquals(returnedNote.getId(),note.getId());
+    }
+
+    @Test
+    void testFindAllNote() {
+        //given
+        Note mockNote1 = new Note( "Note number one", "Note one example lorrem ipsum");
+        mockNote1.setId(1L);
+        Note mockNote2 = new Note( "Note number one", "Note one example lorrem ipsum");
+        mockNote1.setId(2L);
+        Note mockNote3 = new Note( "Note number one", "Note one example lorrem ipsum");
+        mockNote3.setId(3L);
+        List<Note> noteList= Arrays.asList(mockNote1,mockNote2,mockNote3);
+        given(repository.findByAll()).willReturn(noteList);
+
+        //when
+        List<Note> returnedNotes = service.findAllNote();
+
+        //then
+        assertThat(noteList).hasSize(3);
+        assertThat(noteList).contains(mockNote1,mockNote2,mockNote3);
+        assertThat(noteList).element(1).isEqualTo(mockNote1);
     }
 
 }

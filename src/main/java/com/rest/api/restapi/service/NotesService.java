@@ -6,6 +6,7 @@ import com.rest.api.restapi.model.Note;
 import com.rest.api.restapi.repository.NoteRepositoryImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,5 +26,9 @@ public class NotesService {
     public Note save(NoteDto noteDto) {
         Note note = MapperDto.mapDtoToNote(noteDto);
         return note;
+    }
+
+    public List<Note> findAllNote() {
+        return null;
     }
 }

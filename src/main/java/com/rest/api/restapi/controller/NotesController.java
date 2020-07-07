@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 public class NotesController {
@@ -32,6 +33,11 @@ public class NotesController {
                     }
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/notes")
+    public ResponseEntity<List<Note>> getAllNotes() {
+        return new ResponseEntity<>(service.findAllNote(),HttpStatus.OK);
     }
 
     @PostMapping("/notes")

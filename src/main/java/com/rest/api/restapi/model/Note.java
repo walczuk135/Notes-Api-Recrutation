@@ -2,10 +2,15 @@ package com.rest.api.restapi.model;
 
 import lombok.Data;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 @Data
 public class Note {
     private static long nextId;
-    private long id=nextId+1;
+    private static final AtomicLong idGenerator = new AtomicLong(1);
+
+    private long id=idGenerator.getAndIncrement();
     private String title;
     private String description;
 

@@ -40,11 +40,12 @@ public class NotesControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+    
     @Test
     void testGetNoteByIdFound() throws Exception {
         //given
         Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
+        mockNote.setId(1L);
         given(service.findById(anyLong())).willReturn(Optional.of(mockNote));
 
         //then
@@ -79,6 +80,8 @@ public class NotesControllerTest {
         //given
         NoteDto noteDto = new NoteDto("Note number one", "Note one example lorrem ipsum");
         Note mockNote = new Note("Note number one", "Note one example lorrem ipsum");
+        mockNote.setId(1L);
+        mockNote.setId(1L);
         given(service.save(noteDto)).willReturn(mockNote);
 
         //then
@@ -100,11 +103,13 @@ public class NotesControllerTest {
     void testGetAllNote() throws Exception {
         //given
         Note mockNote1 = new Note("Note number one", "Note one example lorrem ipsum");
+        mockNote1.setId(1L);
         Note mockNote2 = new Note("Note number two", "Note one example lorrem ipsum");
+        mockNote2.setId(2L);
         Note mockNote3 = new Note("Note number three", "Note one example lorrem ipsum");
+        mockNote3.setId(3L);
         List<Note> listNotes=Arrays.asList(mockNote1,mockNote2,mockNote3);
         given(service.findAllNote()).willReturn(listNotes);
-
 
         //then
         mockMvc.perform(get("/notes/"))
@@ -113,13 +118,16 @@ public class NotesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-                // Validate the headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/notes/"))
-
                 // Validate the returned fields
                 .andExpect(jsonPath("$.[0].id", is(1)))
                 .andExpect(jsonPath("$.[0].title", is("Note number one")))
-                .andExpect(jsonPath("$.[0].description", is("Note one example lorrem ipsum")));
+                .andExpect(jsonPath("$.[0].description", is("Note one example lorrem ipsum")))
+                .andExpect(jsonPath("$.[1].id", is(2)))
+                .andExpect(jsonPath("$.[1].title", is("Note number two")))
+                .andExpect(jsonPath("$.[1].description", is("Note one example lorrem ipsum")))
+                .andExpect(jsonPath("$.[2].id", is(3)))
+                .andExpect(jsonPath("$.[2].title", is("Note number three")))
+                .andExpect(jsonPath("$.[2].description", is("Note one example lorrem ipsum")));
     }
 
 

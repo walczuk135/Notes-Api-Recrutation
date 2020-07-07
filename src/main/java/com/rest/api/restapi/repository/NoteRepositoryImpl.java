@@ -27,7 +27,10 @@ public class NoteRepositoryImpl implements NoteRepository{
     }
 
     public Note save(Note note) {
-         notes.add(note);
-         return note;
+//        note.setId(note.getId()+1L);
+//        Note note1=note;
+//         notes.add(note1);
+        notes.add(note);
+        return note;
     }
 }
